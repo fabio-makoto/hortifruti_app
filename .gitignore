@@ -1,3 +1,7 @@
+# poetry files
 pyproject.toml
 poetry.lock
+
+# pastas
 uiFiles/
+db/
