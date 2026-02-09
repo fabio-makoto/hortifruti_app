@@ -5,3 +5,6 @@ poetry.lock
 # pastas
 uiFiles/
 db/
+
+# cache files
+__pycache__
