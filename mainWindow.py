@@ -11,17 +11,19 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QCloseEvent, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow, QMessageBox,
     QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
     QWidget)
 
 import sys
 
 from tools import Font, ButtonEffects
+
+from pointOfSaleWindow import Ui_mainWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -34,6 +36,7 @@ class Ui_MainWindow(object):
             "color: #013220;"
             )
         MainWindow.setWindowIcon(QIcon("images/logo.png"))
+        MainWindow.window().closeEvent = self.closeWindow
 
         self.fonts = Font()
         self.effects = ButtonEffects()
@@ -105,6 +108,7 @@ class Ui_MainWindow(object):
             "}"
             )
         self.openPosButton.setFont(self.fonts.fontMainButton)
+        self.openPosButton.clicked.connect(self.openPointOfSaleWindow)
 
         self.horizontalLayoutWithButtons.addWidget(self.openPosButton)
 
@@ -162,6 +166,8 @@ class Ui_MainWindow(object):
             self.reportButton, self.openPosButton, self.registerButton
         ]
 
+        self.allWindows = []
+
         for button in self.allButtons:
             button.pressed.connect(lambda b=button: self.effects.buttonPressEffect(b))
             button.released.connect(lambda b=button: self.effects.buttonReleaseEffect(b))
@@ -174,6 +180,36 @@ class Ui_MainWindow(object):
         self.reportButton.setText(QCoreApplication.translate("MainWindow", u"RELATORIOS", None))
         # self.labelWithLogo.setText(QCoreApplication.translate("MainWindow", u"LOGO", None))
     # retranslateUi
+
+
+    def closeWindow(self, event: QCloseEvent) -> None:
+        msg = QMessageBox()
+        msg.setWindowTitle("Confirmação")
+        msg.setText("Deseja realmente fechar o sistema?")
+        msg.setIcon(QMessageBox.Question)
+
+        buttonSim = msg.addButton("Sim", QMessageBox.YesRole)
+        buttonNao = msg.addButton("Não", QMessageBox.NoRole)
+
+        msg.setDefaultButton(buttonNao)
+        msg.exec()
+
+        if msg.clickedButton() == buttonSim:
+            for window in self.allWindows:
+                window.close()
+
+            event.accept()
+        else:
+            event.ignore()
+
+
+    def openPointOfSaleWindow(self) -> None:
+        self.pointOfSaleWindow = QWidget()
+        self.uiPointOfSaleWindow = Ui_mainWidget()
+        self.uiPointOfSaleWindow.setupUi(self.pointOfSaleWindow)
+        self.pointOfSaleWindow.showMaximized()
+
+        self.allWindows.append(self.pointOfSaleWindow)
 
 
 app = QApplication(sys.argv)
