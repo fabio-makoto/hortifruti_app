@@ -19,8 +19,28 @@ class Font(QFont):
 
         # fonte Label
         self.fontLabel = QFont()
-        self.fontLabel.setPointSize(16)
+        self.fontLabel.setPointSize(14)
         self.fontLabel.setBold(True)
+
+        # fonte do conteudo da tabela
+        self.tableFontContent = QFont()
+        self.tableFontContent.setPointSize(14)
+        self.tableFontContent.setBold(True)
+        
+        # fonte dos headers da tabela
+        self.tableFontHeader = QFont()
+        self.tableFontHeader.setPointSize(12)
+        self.tableFontHeader.setBold(True)
+
+        # fonte label do frente de caixa
+        self.fontPosLabel = QFont()
+        self.fontPosLabel.setPointSize(22)
+        self.fontPosLabel.setBold(True)
+
+        # fonte label do total da venda
+        self.fontTotalSaleValue = QFont()
+        self.fontTotalSaleValue.setPointSize(26)
+        self.fontTotalSaleValue.setBold(True)
 
 
 class ButtonEffects():
@@ -49,7 +69,7 @@ class ButtonEffects():
     
 
 class InputDialog(QDialog):
-    def __init__(self, product_code: int, kg_or_unit_from_db: str = None) -> None:
+    def __init__(self, productNameFounded: str, productCode: int, kgOrUnitFromDb: str = None) -> None:
         super().__init__()
         self.fonts = Font()
         self.alerts = Alert()
@@ -73,9 +93,9 @@ class InputDialog(QDialog):
 
         # widgetWithLabelAndLineEdit.setLayout(horizontalLayout)
 
-        if kg_or_unit_from_db == "kg":  # produto vendido por peso
+        if kgOrUnitFromDb == "kg":  # produto vendido por peso
             labelKgPrice = QLabel()
-            labelKgPrice.setText("Digite o peso em gramas: ")
+            labelKgPrice.setText(f"Digite o peso em gramas do(a) {productNameFounded}: ")
             labelKgPrice.setFont(self.fonts.fontLabel)
             labelKgPrice.setMinimumWidth(100)
             labelKgPrice.setMinimumHeight(40)
@@ -91,13 +111,14 @@ class InputDialog(QDialog):
             )
             self.valueLineEdit.setTextMargins(10, 0, 0, 0)
             self.valueLineEdit.setPlaceholderText("Digite o peso...")
+            self.valueLineEdit.setFont(self.fonts.tableFontContent)
             horizontalLayout.addWidget(self.valueLineEdit)
 
             # se for kg
             self.kg_or_unit = "kg"
         else:  # produto vendido por unidade
             labelUnitPrice = QLabel()
-            labelUnitPrice.setText("Digite a quantidade:")
+            labelUnitPrice.setText(f"Digite a quantidade do(a) {productNameFounded}:")
             labelUnitPrice.setFont(self.fonts.fontLabel)
             labelUnitPrice.setMinimumWidth(100)
             labelUnitPrice.setMinimumHeight(40)
@@ -112,7 +133,8 @@ class InputDialog(QDialog):
                 "border: 2px solid;"
                 "border-radius: 10px;"
             )
-            self.valueLineEdit.setTextMargins(10, 0, 0, 0)  
+            self.valueLineEdit.setTextMargins(10, 0, 0, 0)
+            self.valueLineEdit.setFont(self.fonts.fontLabel)
             horizontalLayout.addWidget(self.valueLineEdit)
 
             # se for unit
