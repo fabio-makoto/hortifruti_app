@@ -10,3 +10,16 @@ class Alert():
                 QMessageBox.information(QWidget(), "Atenção", "Digite o código do produto.")
             case 3:  # mesangem de erro personalizada
                 QMessageBox.critical(QWidget(), "Atenção", msg)
+            case 4:  # caixa de dialogo para confirmar a finalizacao da venda
+                self.msgConfirm = QMessageBox()
+                self.msgConfirm.setWindowTitle("Confirmação")
+                self.msgConfirm.setText("Deseja finalizar a venda?")
+                self.msgConfirm.setIcon(QMessageBox.Information)
+
+                self.buttonSim = self.msgConfirm.addButton("Sim", QMessageBox.YesRole)
+                self.buttonNao = self.msgConfirm.addButton("Não", QMessageBox.NoRole)
+
+                self.msgConfirm.setDefaultButton(self.buttonSim)
+                self.msgConfirm.exec()
+            case 5:  # mensagem de erro personalizada
+                QMessageBox.information(QWidget(), "Atenção", msg)
