@@ -24,6 +24,8 @@ import sys
 from tools import Font, ButtonEffects
 
 from pointOfSaleWindow import Ui_mainWidget
+from registerProductWindow import Ui_RegisterProductWindow
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -82,6 +84,7 @@ class Ui_MainWindow(object):
             "}"
             )
         self.registerButton.setFont(self.fonts.fontMainButton)
+        self.registerButton.clicked.connect(self.openRegisterProductWindow)
 
         self.horizontalLayoutWithButtons.addWidget(self.registerButton)
 
@@ -210,6 +213,15 @@ class Ui_MainWindow(object):
         self.pointOfSaleWindow.showMaximized()
 
         self.allWindows.append(self.pointOfSaleWindow)
+
+    
+    def openRegisterProductWindow(self) -> None:
+        self.registerProductWindow = QWidget()
+        self.uiRegisterProductWindow = Ui_RegisterProductWindow()
+        self.uiRegisterProductWindow.setupUi(self.registerProductWindow)
+        self.registerProductWindow.show()
+
+        self.allWindows.append(self.registerProductWindow)
 
 
 app = QApplication(sys.argv)
